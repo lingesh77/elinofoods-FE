@@ -23,6 +23,8 @@ const categoryProductMap = {
 
 export default function Products() {
   const { handle } = useParams();
+  console.log("handle:", handle)
+
    const { id } = useParams();
    console.log("id:", id)
   const { addToCart, setIsCartOpen } = useCart();
@@ -36,6 +38,7 @@ export default function Products() {
 
   const searchParams = new URLSearchParams(location.search);
   const category = searchParams.get("category");
+  console.log("category:", category)
 
   // State
   const [product, setProduct] = useState(null);
@@ -95,6 +98,7 @@ export default function Products() {
           return node.id !== currentProductId;
         })
         .slice(0, 4);
+    
       setOtherProducts(filteredProducts);
     } catch (error) {
       console.error("Error fetching other products:", error);
@@ -102,7 +106,7 @@ export default function Products() {
       setOtherProductsLoading(false);
     }
   };
-
+console.log("fetched product:",otherProducts)
   const fetchProductRating = async (productId) => {
     if (!productId) return;
 
@@ -111,9 +115,7 @@ export default function Products() {
       console.log("Fetching ratings for product ID:", productId);
       console.log("Cleaned ID:", cleanId);
 
-     /*  const url = `${
-        process.env.REACT_APP_API_URL || "http://localhost:5000/api/shopify"
-      }/reviews/${cleanId}/rating`; */
+
       console.log("Rating fetch URL:", url);
 
       const response = await fetch(`${url}/reviews/${cleanId}/rating`);

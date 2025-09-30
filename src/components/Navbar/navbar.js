@@ -33,6 +33,7 @@ const Navbar = () => {
   const [products, setProducts] = useState([]);
   const [productLoading, setProductLoading] = useState(false);
   const [productError, setProductError] = useState(null);
+  const[dropdownitems,setDropdownitems]=useState([])
 
   const navigate = useNavigate();
 
@@ -61,7 +62,30 @@ const Navbar = () => {
     fetchProducts();
     return () => { ignore = true; };
   }, [searchTerm]);
+  useEffect(()=>{
+    const fetchProductscategory = async () => {
+      try{
+        const allProducts = await shopifyService.getProducts();
+       
+        const categories = new Set();
+        allProducts.forEach((edge) => {
+          const node = edge.node || edge;
+          node.handle && categories.add(node.handle);
+        });
 
+        setDropdownitems(Array.from(categories));
+
+
+
+
+      }catch(err){
+        console.error(err)
+      }
+
+    }
+    fetchProductscategory();
+
+  },[])
   const toggleMenu = () => setIsOpen((val) => !val);
   const openCart = () => setIsCartOpen(true);
 
@@ -221,7 +245,7 @@ const Navbar = () => {
               >
                 Search by Categories
               </p>
-              {dropdown.link.map((item, index) => (
+              {dropdownitems.map((item, index) => (
                 <a
                   key={index}
                   href={`/products?category=${item
